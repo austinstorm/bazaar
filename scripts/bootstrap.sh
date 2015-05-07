@@ -4,7 +4,7 @@ set -e
 
 # @@@ Change the following 2 lines if you want to install OL from a different place or as a different user
 OL_ROOT=/openlibrary
-OL_USER=vagrant
+OL_USER=user
 
 # Set the locale to POSIX
 # Important to do this before installing postgresql
@@ -59,7 +59,7 @@ sixpack-client"
 REINDEX_SOLR=no
 
 function setup_database() {
-    echo "finding if posgres user vagrant already exists."
+    echo "Attempting to discover if posgres user vagrant already exists."
     x=`sudo -u postgres psql -t -c "select count(*) FROM pg_catalog.pg_user where usename='$OL_USER'"`
     echo "result = $x"
     if [ "$x" -eq 0 ]; then

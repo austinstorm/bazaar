@@ -1,8 +1,12 @@
-# Open Library
+# Bazaar
 
-Open web page for every book ever published.
+Open web page for everything in the world.
 
-This repository contains the code that powers https://openlibrary.org/
+Meta-data is a love note to the future.
+
+The wheel is the only thing worth reinventing.
+
+Forked from the Openlibrary project: https://openlibrary.org/
 
 [![Build Status](https://travis-ci.org/internetarchive/openlibrary.svg?branch=master)](https://travis-ci.org/internetarchive/openlibrary)
 

@@ -4,7 +4,7 @@ set -e
 
 # @@@ Change the following 2 lines if you want to install OL from a different place or as a different user
 OL_ROOT=/openlibrary
-OL_USER=user
+OL_USER=bazaar
 
 # Set the locale to POSIX
 # Important to do this before installing postgresql
@@ -78,7 +78,7 @@ function setup_database() {
     else
         echo "pg_user $OL_USER already exists. no need to setup database"
     fi
-}   
+}
 
 function setup_ol() {
     # Download sample dev-instance database from archive.org
@@ -112,6 +112,11 @@ easy_install pip
 
 pip install $PYTHON_PACKAGES
 
+# Create the user if it doesn't exist
+if [[ $(cat /etc/passwd | grep $OL_USER | wc -l) -eq 0 ]]; then
+    useradd -m $OL_USER -s /bin/bash
+fi
+
 setup_database
 setup_nginx
 
@@ -120,6 +125,7 @@ perl -i -pe 's/8080/8983/'  /etc/tomcat6/server.xml
 cp $OL_ROOT/conf/solr/conf/schema.xml /etc/solr/conf/
 /etc/init.d/tomcat6 restart
 
+# Create and own the lib directory
 mkdir -p /var/log/openlibrary /var/lib/openlibrary
 chown $OL_USER:$OL_USER /var/log/openlibrary /var/lib/openlibrary
 
@@ -127,9 +133,9 @@ chown $OL_USER:$OL_USER /var/log/openlibrary /var/lib/openlibrary
 cd $OL_ROOT && make
 
 cp $OL_ROOT/conf/init/* /etc/init/
-cd $OL_ROOT/conf/init 
+cd $OL_ROOT/conf/init
 for name in ol-*
-do 
+do
 	echo starting ${name//.conf}
 	initctl start ${name//.conf} || initctl restart ${name//.conf}
 done
